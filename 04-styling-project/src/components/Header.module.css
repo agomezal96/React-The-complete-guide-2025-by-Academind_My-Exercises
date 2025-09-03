@@ -1,0 +1,51 @@
+/* La extensión .module.css es una señal para el build-process, para que Vite procese este archivo de forma distinta. En el componente Header en lugar de importarlo como
+import './Header.module.css';
+para que se genere un objeto JS que se generará con el proceso build que podemos llamar classes.:
+import classes from './Header.module.css';
+Este objeto contendrá las clases transformadas en clases únicas. Entonces debes añadir las clases en el className usando el objeto classes.suSelector.
+
+Una vez se haga el build veremos que en nuestro HTML se han puesto las clases con un nombre diferente al que nosotros le hemos puesto. Esto es generado automáticamente por VITE. Este className será único para ESE componente.
+*/
+
+header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+header img {
+  object-fit: contain;
+  margin-bottom: 2rem;
+  width: 11rem;
+  height: 11rem;
+}
+
+header h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: 0.4em;
+  text-align: center;
+  text-transform: uppercase;
+  color: #9a3412;
+  font-family: 'Pacifico', cursive;
+  margin: 0;
+}
+
+header p {
+  text-align: center;
+  color: #a39191;
+  margin: 0;
+}
+
+@media (min-width: 768px) {
+  header {
+    margin-bottom: 4rem;
+  }
+
+  header h1 {
+    font-size: 2.25rem;
+  }
+}

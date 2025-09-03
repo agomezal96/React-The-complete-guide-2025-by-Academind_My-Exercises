@@ -1,0 +1,58 @@
+import fs from 'node:fs/promises';
+
+import bodyParser from 'body-parser';
+import express from 'express';
+
+const app = express();
+
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.url}`);
+  next();
+});
+
+app.use(express.static('images')); // no tengo una ruta explícita de imágenes pero sí tengo esta línea que lo que hace es exponer todos los archivos almacenados en la carpeta images directamente en la raíz del server backend. Lo que significa que en el frontend solo tendremos que hacer petición a la ruta raíz /nombreImagen
+app.use(bodyParser.json());
+
+// CORS
+
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*'); // allow all domains
+  res.setHeader('Access-Control-Allow-Methods', 'GET, PUT');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  next();
+});
+
+app.get('/places', async (req, res) => {
+  const fileContent = await fs.readFile('./data/places.json');
+
+  const placesData = JSON.parse(fileContent);
+
+  res.status(200).json({ places: placesData });
+});
+
+app.get('/user-places', async (req, res) => {
+  const fileContent = await fs.readFile('./data/user-places.json');
+
+  const places = JSON.parse(fileContent);
+
+  res.status(200).json({ places });
+});
+
+app.put('/user-places', async (req, res) => {
+  const places = req.body.places;
+
+  await fs.writeFile('./data/user-places.json', JSON.stringify(places));
+
+  res.status(200).json({ message: 'User places updated!' });
+});
+
+// 404
+app.use((req, res, next) => {
+  if (req.method === 'OPTIONS') {
+    return next();
+  }
+  res.status(404).json({ message: '404 - Not Found' });
+});
+
+app.listen(3000);
