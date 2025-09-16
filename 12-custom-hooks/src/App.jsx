@@ -1,4 +1,4 @@
-import { useRef, useState, useCallback, useEffect } from 'react';
+import { useRef, useState, useCallback } from 'react';
 
 import Places from './components/Places.jsx';
 import Modal from './components/Modal.jsx';
@@ -14,7 +14,7 @@ function App() {
   const [errorUpdatingPlaces, setErrorUpdatingPlaces] = useState();
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
-  const {error, fetchedData: userPlaces, isFetching} = useFetch(fetchUserPlaces)
+  const {error, fetchedData: userPlaces, isFetching, setFetchedData: setUserPlaces} = useFetch(fetchUserPlaces, [])
 
   function handleStartRemovePlace(place) {
     setModalIsOpen(true);
@@ -24,9 +24,6 @@ function App() {
   function handleStopRemovePlace() {
     setModalIsOpen(false);
   }
-
-const x = ;
-
   async function handleSelectPlace(selectedPlace) {
     // await updateUserPlaces([selectedPlace, ...userPlaces]);
 
@@ -71,13 +68,13 @@ const x = ;
 
       setModalIsOpen(false);
     },
-    [userPlaces]
+    [userPlaces, setUserPlaces]
   );
 
   function handleError() {
     setErrorUpdatingPlaces(null);
   }
-
+ 
   return (
     <>
       <Modal open={errorUpdatingPlaces} onClose={handleError}>
@@ -118,7 +115,9 @@ const x = ;
           />
         )}
 
-        <AvailablePlaces onSelectPlace={handleSelectPlace} />
+        <AvailablePlaces 
+        onSelectPlace={handleSelectPlace} 
+        />
       </main>
     </>
   );
